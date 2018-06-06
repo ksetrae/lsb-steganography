@@ -1,5 +1,4 @@
 import logging
-import time
 
 from PIL import Image
 import numpy as np
@@ -26,7 +25,7 @@ def insert(bits_amount: int, base_img, img_to_hide):
 
     for x in range(pixels_amount):
         base_data[x] = base_data[x][:8-bits_amount] + hidden_joint[x*bits_amount:x*bits_amount+bits_amount]
-    
+
     encoded_data = [int(pix, 2) for pix in base_data]
     encoded_img = Image.fromarray(np.array(encoded_data).reshape(*base_img.size))
     return encoded_img
@@ -37,7 +36,6 @@ def extract(bits_amount: int, size: tuple, img):
     length = size[0]*size[1]
     data_cut = [format(x, '08b') for x in list(img.getdata())]
     data_cut = [x[len(x)-bits_amount:] for x in data_cut]
-    print(''.join(data_cut[:100]))
 
     data_joint = ''.join(data_cut)
     extr_data = [data_joint[i:i + 8] for i in range(0, len(data_joint), 8)]
@@ -54,6 +52,7 @@ if __name__ == "__main__":
 
     inserted = insert(bits_amount, base_img, hidden_img)
     extracted = extract(bits_amount, hidden_img.size, inserted)
+    inserted.show()
     extracted.show()
 
 
